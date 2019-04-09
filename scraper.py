@@ -10,7 +10,7 @@ def scraper():
     #
     # Scrape table containing longitude and latitudes of countries and 
     # bring into pandas
-    long_lat=pd.read_html("https://developers.google.com/public-data/docs/canonical/countries_csv",skiprows=1)[0]
+    long_lat = pd.read_html("https://developers.google.com/public-data/docs/canonical/countries_csv",skiprows=1)[0]
     # renaming columns
     long_lat.columns = ['country_code', 'latitude','longitude','name']
 
@@ -21,14 +21,14 @@ def scraper():
     # merge code and lat/long tables
     merged_col = pd.merge(converting_country_code, long_lat, left_on = 'country_code_2',right_on="country_code",how="inner")
     # drop excess columns
-    merged_col=merged_col.drop(['name_y','country_code','country_code_2'], axis=1)
+    merged_col = merged_col.drop(['name_y','country_code','country_code_2'], axis=1)
     # renaming columns
     merged_col.columns = ['country','country_code','latitude','longitude']
 
     # Accessing WHO country list to narrow lat/longs to relevent names
     country_r = requests.get("http://apps.who.int/gho/athena/api/COUNTRY?format=json").json()
     # pull rows of country data from json
-    who_country_list=[]
+    who_country_list = []
     country_code = country_r['dimension'][0]['code']
     for country in country_code:
         who_country_list.append(country["label"])
@@ -125,13 +125,4 @@ def scraper():
                     pass
         # add each year's dictionary to overall list
         JSON['data'].append(document)
-
-    # initiate mongo connection
-    client = MongoClient()
-    # make/connect to db
-    db = client['disease_db']
-    # establish collection object
-    collection = db.disease_collection
-    # upsert json to collection
-    collection.update({}, JSON, upsert=True)
-    print(JSON)
+    return JSON
