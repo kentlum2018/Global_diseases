@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>DiseaseHTML</title>
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
+  integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+  crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
+  integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
+  crossorigin=""></script>
+
+  <!--D3 cdn-->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.min.js"></script> -->
+
+  <!-- Our CSS -->
+  <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
+</head>
+
+<body>
+  <!-- The div where we will inject our map -->
+  <div id="map"></div>
+
+  <!-- API key -->
+  <script type="text/javascript" src="config.js"></script>
+  <!-- Our JS -->
+  <!-- <script type="text/javascript" src="logic.js"></script> -->
+  <script>
+      //The url below will find the measured diseases in the past day from the USGS website.
+      // Store our API endpoint inside queryUrl
+      // var queryUrl = "https://earthquake.usgs.gov/diseases/feed/v1.0/summary/all_day.geojson";
+      //hardcode json data for testing
+      var json = [
+        {
+        "disease": [
+          {
+          "max_lat": 9.081999, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.18999999999999997, 
+        "year": 1980
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 14.497401000000002, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.19999999999999998, 
+        "year": 1981
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 7.946527000000001, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.09, 
+        "year": 1982
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 12.238333, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.23, 
+        "year": 1983
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 12.238333, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.12, 
+        "year": 1984
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 12.238333, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.0, 
+        "year": 1985
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 9.081999, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.12, 
+        "year": 1986
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 21.00789, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.22, 
+        "year": 1987
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 9.081999, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.30000000000000004, 
+        "year": 1988
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 9.081999, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.18999999999999997, 
+        "year": 1989
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 9.081999, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.30000000000000004, 
+        "year": 1990
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 9.081999, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.33999999999999997, 
+        "year": 1991
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 9.081999, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.19999999999999998, 
+        "year": 1992
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 9.081999, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.17, 
+        "year": 1993
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 9.081999, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.18999999999999997, 
+        "year": 1994
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 9.30769, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.36, 
+        "year": 1995
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 9.30769, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.24999999999999997, 
+        "year": 1996
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 9.30769, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.33999999999999997, 
+        "year": 1997
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 9.30769, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.56, 
+        "year": 1998
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 12.238333, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.35, 
+        "year": 1999
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 42.315407, 
+          "min_lat": -38.416097, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 9.945587, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.36, 
+        "year": 2000
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 42.315407, 
+          "min_lat": -38.416097, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 14.497401000000002, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.37, 
+        "year": 2001
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 42.315407, 
+          "min_lat": -38.416097, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 12.238333, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.51, 
+        "year": 2002
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 42.315407, 
+          "min_lat": -38.416097, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 21.00789, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.47, 
+        "year": 2003
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 42.315407, 
+          "min_lat": -38.416097, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 12.238333, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }
+        ], 
+        "temp": 0.49, 
+        "year": 2004
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 42.315407, 
+          "min_lat": -38.416097, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 17.570692, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }, 
+          {
+          "max_lat": 36.204824, 
+          "min_lat": -38.416097, 
+          "name": "Leprosy"
+          }
+        ], 
+        "temp": 0.54, 
+        "year": 2005
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 42.315407, 
+          "min_lat": -38.416097, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 12.238333, 
+          "min_lat": -9.189967, 
+          "name": "Yellow Fever"
+          }, 
+          {
+          "max_lat": 36.204824, 
+          "min_lat": -38.416097, 
+          "name": "Leprosy"
+          }
+        ], 
+        "temp": 0.51, 
+        "year": 2006
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 42.315407, 
+          "min_lat": -38.416097, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 8.619543, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }, 
+          {
+          "max_lat": 40.463667, 
+          "min_lat": -38.416097, 
+          "name": "Leprosy"
+          }
+        ], 
+        "temp": 0.55, 
+        "year": 2007
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 42.315407, 
+          "min_lat": -38.416097, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 12.238333, 
+          "min_lat": -38.416097, 
+          "name": "Yellow Fever"
+          }, 
+          {
+          "max_lat": 40.463667, 
+          "min_lat": -38.416097, 
+          "name": "Leprosy"
+          }
+        ], 
+        "temp": 0.41000000000000003, 
+        "year": 2008
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 41.20438, 
+          "min_lat": -38.416097, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 17.570692, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }, 
+          {
+          "max_lat": 40.463667, 
+          "min_lat": -38.416097, 
+          "name": "Leprosy"
+          }
+        ], 
+        "temp": 0.53, 
+        "year": 2009
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 41.377491, 
+          "min_lat": -38.416097, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 17.570692, 
+          "min_lat": -9.189967, 
+          "name": "Yellow Fever"
+          }, 
+          {
+          "max_lat": 41.87194, 
+          "min_lat": -40.900557, 
+          "name": "Leprosy"
+          }
+        ], 
+        "temp": 0.6, 
+        "year": 2010
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 40.143105, 
+          "min_lat": -30.559482, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 17.607789, 
+          "min_lat": -9.189967, 
+          "name": "Yellow Fever"
+          }, 
+          {
+          "max_lat": 35.86166, 
+          "min_lat": -38.416097, 
+          "name": "Leprosy"
+          }
+        ], 
+        "temp": 0.49, 
+        "year": 2011
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 40.143105, 
+          "min_lat": -30.559482, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 56.130366, 
+          "min_lat": -9.189967, 
+          "name": "Yellow Fever"
+          }, 
+          {
+          "max_lat": 36.204824, 
+          "min_lat": -38.416097, 
+          "name": "Leprosy"
+          }
+        ], 
+        "temp": 0.5, 
+        "year": 2012
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 38.861034000000004, 
+          "min_lat": -30.559482, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 15.454166, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }, 
+          {
+          "max_lat": 36.204824, 
+          "min_lat": -40.900557, 
+          "name": "Leprosy"
+          }
+        ], 
+        "temp": 0.54, 
+        "year": 2013
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 35.86166, 
+          "min_lat": -30.559482, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 56.130366, 
+          "min_lat": -9.189967, 
+          "name": "Yellow Fever"
+          }, 
+          {
+          "max_lat": 36.204824, 
+          "min_lat": -40.900557, 
+          "name": "Leprosy"
+          }
+        ], 
+        "temp": 0.63, 
+        "year": 2014
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 35.86166, 
+          "min_lat": -30.559482, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 56.130366, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }, 
+          {
+          "max_lat": 40.463667, 
+          "min_lat": -40.900557, 
+          "name": "Leprosy"
+          }
+        ], 
+        "temp": 0.74, 
+        "year": 2015
+        }, 
+        {
+        "disease": [
+          {
+          "max_lat": 35.86166, 
+          "min_lat": -30.559482, 
+          "name": "Malaria"
+          }, 
+          {
+          "max_lat": 9.945587, 
+          "min_lat": -14.235004, 
+          "name": "Yellow Fever"
+          }, 
+          {
+          "max_lat": 52.132633, 
+          "min_lat": -38.416097, 
+          "name": "Leprosy"
+          }
+        ], 
+        "temp": 0.91, 
+        "year": 2016
+        }
+      ]
+      //empty lists created here to collecto particular information from the json data
+      var maxlist = [];
+      var minlist = [];
+      var namelist = [];
+      var polyline = [];
+      var yearlist = [];
+      var templist = [];
+      // var pointA = new L.LatLng(max_lat, 0);
+      // var pointA = [];
+      // var pointB = new L.LatLng(max_lat, 360);
+      // var pointB = [];
+      var pointList = [];
+
+      json.forEach(instance=>{
+        yearlist.push(instance.year);
+        templist.push(instance.temp);
+          instance.disease.forEach(disease=>{
+            maxlist.push(disease.max_lat)
+            minlist.push(disease.min_lat);
+            namelist.push(disease.name);
+
+            A=[disease.max_lat,0];
+            B=[disease.max_lat,360];
+            pointList.push([A,B]);
+            // pointA.push([disease.max_lat,0]);
+            // B=new L.LatLng(disease.max_lat,360);
+            // pointB.push([disease.max_lat,360]);
+            pline = new L.Polyline(pointList, {
+              time: instance.year,
+              color: 'red',
+              weight: 3,
+              opacity: 1,
+              smoothFactor: 1
+            });
+            polyline.push(pline);
+        })
+      });
+
+      layerGroup = L.layerGroup([polyline]);
+      var sliderControl = L.control.sliderControl({layer:layerGroup});
+      map.addControl(sliderControl);
+      sliderControl.startSlider();
+
+      // // Perform a GET request to the query URL
+      // d3.json(queryUrl, function(data) {
+      //   // Once we get a response, send the data.features object to the createFeatures function
+      //   createFeatures(data.features);
+      // });
+
+      // function createFeatures(earthquakeData) {
+
+        // Define a function we want to run once for each feature in the features array
+        // Give each feature a popup describing the place and time of the earthquake
+        //The function below pull the place, time and magnitude information into a pop up for each location
+        // function onEachFeature(feature, layer) {
+        //   layer.bindPopup("<h3>" + feature.properties.place +
+        //     "</h3><hr><p>" + new Date(feature.properties.time) + 
+        //     "</h3><hr><p>" + "Magnitude " + feature.properties.mag +"</p>");
+        // }
+
+        // Create a GeoJSON layer containing the features array on the earthquakeData object
+        // Run the onEachFeature function once for each piece of data in the array
+        //The pointToLayer feature below takes in latlng function and returns a marker. In this problem we are creating a circle of varying opacitcy.
+        // var diseases = L.geoJSON(earthquakeData, {
+        //   onEachFeature: onEachFeature,
+        //   pointToLayer: function (feature, latlng) {
+            
+        //     var geojsonMarkerOptions = {
+        //       //radius changing here based on the magnitude values
+        //       radius: 5*feature.properties.mag,
+        //       fillColor: "blue",
+        //       color: "black",
+        //       weight: .5,
+        //       opacity: 1,
+        //       // fillOpacity changing here based on the magnitude values
+        //       fillOpacity:.1*feature.properties.mag
+        //     };
+        //     return L.circleMarker(latlng, geojsonMarkerOptions);
+        //   }
+        // });
+
+         
+      //   // Sending our diseases layer to the createMap function
+        
+      //   createMap(diseases);
+      // // }
+
+      // function createMap(diseases) {
+
+      //   // Define streetmap and darkmap layers
+      //   var streetmap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+      //     attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+      //     maxZoom: 18,
+      //     id: "mapbox.streets",
+      //     accessToken: API_KEY
+      //   });
+
+      //   var darkmap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+      //     attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+      //     maxZoom: 18,
+      //     id: "mapbox.dark",
+      //     accessToken: API_KEY
+      //   });
+
+      //   // Define a baseMaps object to hold our base layers
+      //   var baseMaps = {
+      //     "Street Map": streetmap,
+      //     "Dark Map": darkmap
+      //   };
+
+      //   // Create overlay object to hold our overlay layer
+      //   var overlayMaps = {
+      //     MALARIA: diseases
+      //   };
+      //     // Create overlay object to hold our overlay layer
+      //     var overlayMaps = {
+      //     YELLOWFEVER: diseases
+      //   };
+      //     // Create overlay object to hold our overlay layer
+      //     var overlayMaps = {
+      //     LEPROSY: diseases
+      //   };
+
+      //   // Create our map, giving it the streetmap and diseases layers to display on load
+      //   var myMap = L.map("map", {
+      //     center: [
+      //       37.09, -95.71
+      //     ],
+      //     zoom: 5,
+      //     layers: [streetmap, diseases]
+      //   });
+
+      //   // Create a layer control
+      //   // Pass in our baseMaps and overlayMaps
+      //   // Add the layer control to the map
+      //   L.control.layers(baseMaps, overlayMaps, {
+      //     collapsed: false
+      //   }).addTo(myMap);
+      // }
+
+  
+  </script>
+</body>
+</html>

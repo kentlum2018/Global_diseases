@@ -62,6 +62,8 @@ def scraper():
     disease_df.columns = ['year', 'country', 'instances', 'disease']
     # fill NaN values in 'instances' column, as they correspond to missing data and this will ignore those cells during analysis.
     disease_df["instances"] = disease_df["instances"].fillna(0)
+    # set years to match temp data range
+    disease_df = disease_df.loc[disease_df['year'] >= 1980, :]
     # make df with latitudes and disease instance information
     disease_lat = pd.merge(disease_df, who_and_others[['country', 'latitude']], on='country')
     #
@@ -83,46 +85,107 @@ def scraper():
     years = list(temp_data_df['Year'])
     # make dict of one list to upload to mongo
     JSON = {
-        'data':[]
+        'type':'FeatureCollection',
+        'features':[]
     }
-    # limit to 1980-2016 to match yellow fever data
-    for year in years[:-2]:
-        # initialize dict to add info for each year
-        document = {}
-        # add temp
-        document['temp'] = temp_data_df.loc[
-            temp_data_df['Year'] == year, 
-            ['Normalized Temp']
-        ].values[0][0]
-        # add year
-        document['year'] = year
-        # add disease list, to which disease dicts will be added
-        document['disease'] = []
-        # iterate over diseases in the dataframe
-        for disease in disease_lat['disease'].unique():
-            disease_dict = {}
-            # check that there is info for a given disease for that year
-            if not disease_lat.loc[(disease_lat['disease'] == disease) &
-                                (disease_lat['year'] == year) &
-                                (disease_lat['instances'] > 2), 
-                                :].empty:
-                # if there is info, query min and max latitude of spread for that year
-                try:
-                    max_lat = disease_lat.loc[(disease_lat['disease'] == disease) &
-                                          (disease_lat['year'] == year) &
-                                          (disease_lat['instances'] > 2), 
-                                          :]['latitude'].max()
-                    min_lat = disease_lat.loc[(disease_lat['disease'] == disease) &
-                                          (disease_lat['year'] == year) &
-                                          (disease_lat['instances'] > 2), 
-                                          :]['latitude'].min()
-                    disease_dict['name'] = disease
-                    disease_dict['max_lat'] = max_lat
-                    disease_dict['min_lat'] = min_lat
-                    # add disease info to list for that year
-                    document['disease'].append(disease_dict)
-                except:
-                    pass
-        # add each year's dictionary to overall list
-        JSON['data'].append(document)
+    # iterate over diseases then years to find max latitudes for each combo
+    for disease in disease_lat['disease'].unique():
+        # sub dataframe to isolate disease-specific data
+        sub_df = disease_lat.loc[disease_lat['disease'] == disease,:]
+
+        # make geoJSON feature for max lat lines
+        for year in sub_df['year'].unique():
+            feature = {
+                'type':'Feature',
+                'properties':{},
+                'geometry':{
+                    'type':'LineString',
+                    'coordinates':[]
+                }
+            }
+            feature['properties']['name'] = disease
+            feature['properties']['time'] = f'{year}'
+            feature['properties']['temp'] = temp_data_df.loc[
+                temp_data_df['Year'] == year, 
+                ['Normalized Temp']
+                ].iat[0,0]
+            feature['properties']['line'] = 'max'
+
+            max_lat = sub_df.loc[
+                (disease_lat['year'] == year)
+            ]['latitude'].max()
+            feature['geometry']['coordinates'].append([1000,max_lat])
+            feature['geometry']['coordinates'].append([-1000,max_lat])
+            JSON['features'].append(feature)
+
+        # make geoJSON feature for min lat lines
+        for year in sub_df['year'].unique():
+            feature = {
+                'type':'Feature',
+                'properties':{},
+                'geometry':{
+                    'type':'LineString',
+                    'coordinates':[]
+                }
+            }
+            feature['properties']['name'] = disease
+            feature['properties']['time'] = f'{year}'
+            feature['properties']['temp'] = temp_data_df.loc[
+                temp_data_df['Year'] == year, 
+                ['Normalized Temp']
+                ].iat[0,0]
+            feature['properties']['line'] = 'min'
+
+            min_lat = sub_df.loc[
+                (disease_lat['year'] == year)
+            ]['latitude'].min()
+            feature['geometry']['coordinates'].append([1000,min_lat])
+            feature['geometry']['coordinates'].append([-1000,min_lat])
+            JSON['features'].append(feature)
+
+
+
+
+
+
+    # for year in years[:-2]:
+    #     # initialize dict to add info for each year
+    #     document = {}
+    #     # add temp
+    #     document['temp'] = temp_data_df.loc[
+    #         temp_data_df['Year'] == year, 
+    #         ['Normalized Temp']
+    #     ].values[0][0]
+    #     # add year
+    #     document['year'] = year
+    #     # add disease list, to which disease dicts will be added
+    #     document['disease'] = []
+    #     # iterate over diseases in the dataframe
+    #     for disease in disease_lat['disease'].unique():
+    #         disease_dict = {}
+    #         # check that there is info for a given disease for that year
+    #         if not disease_lat.loc[(disease_lat['disease'] == disease) &
+    #                             (disease_lat['year'] == year) &
+    #                             (disease_lat['instances'] > 2), 
+    #                             :].empty:
+    #             # if there is info, query min and max latitude of spread for that year
+    #             try:
+    #                 max_lat = disease_lat.loc[(disease_lat['disease'] == disease) &
+    #                                       (disease_lat['year'] == year) &
+    #                                       (disease_lat['instances'] > 2), 
+    #                                       :]['latitude'].max()
+    #                 min_lat = disease_lat.loc[(disease_lat['disease'] == disease) &
+    #                                       (disease_lat['year'] == year) &
+    #                                       (disease_lat['instances'] > 2), 
+    #                                       :]['latitude'].min()
+    #                 disease_dict['name'] = disease
+    #                 disease_dict['max_lat'] = max_lat
+    #                 disease_dict['min_lat'] = min_lat
+    #                 # add disease info to list for that year
+    #                 document['disease'].append(disease_dict)
+    #             except:
+    #                 pass
+    #     # add each year's dictionary to overall list
+    #     JSON['data'].append(document)
+    print(JSON)
     return JSON
