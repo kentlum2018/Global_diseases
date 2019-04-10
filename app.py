@@ -9,8 +9,11 @@ mongo = PyMongo(app, uri="mongodb://localhost:27017/disease_db")
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', iframe='/loadmap')
 
+@app.route('/loadmap')
+def loadmap():
+    return render_template('map.html')
 
 @app.route('/data')
 def data():
