@@ -113,7 +113,7 @@ def scraper():
 
             max_lat = sub_df.loc[
                 (disease_lat['year'] == year) &
-                (disease_lat['instances'] > 2)
+                (disease_lat['instances'] > 0)
             ]['latitude'].max()
             feature['geometry']['coordinates'].append([1000,max_lat])
             feature['geometry']['coordinates'].append([-1000,max_lat])
@@ -139,7 +139,7 @@ def scraper():
 
             min_lat = sub_df.loc[
                 (disease_lat['year'] == year) &
-                (disease_lat['instances'] > 2)
+                (disease_lat['instances'] > 0)
             ]['latitude'].min()
             feature['geometry']['coordinates'].append([1000,min_lat])
             feature['geometry']['coordinates'].append([-1000,min_lat])

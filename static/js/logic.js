@@ -3,8 +3,8 @@ mapboxgl.accessToken = API_KEY
 var map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/light-v10',
-  center: [0, 30],
-  zoom: 1.3
+  center: [0, 10],
+  zoom: 1
 });
 
 // year[0] = 1980, year[36] = 2016
@@ -133,9 +133,9 @@ map.on('load', function() {
     filterBy(36, temps);
     document.getElementById('slider').addEventListener('input', function(e) {
       // parse strings of ints from slider on index page, 0 to 36 
-      var year = parseInt(e.target.value, 10);
+      var index = parseInt(e.target.value, 10);
       // pass int to filterBy
-      filterBy(year, temps);
+      filterBy(index, temps);
     });
       
       
