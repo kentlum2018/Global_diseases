@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Disease</title>
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.css' rel='stylesheet'/>
+
+  <!-- D3 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.min.js"></script>
+
+  <!-- Our CSS -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+  <style>
+    
+  </style>
+  <!-- The div where we will inject our map -->
+  <nav id="menu"></nav>
+  <div id="map"></div>
+  <div class='map-overlay top'>
+    <div class='map-overlay-inner'>
+      <h2>Year Selector</h2>
+      <label id='year'></label>
+      <label id='temp'></label>
+      <input id='slider' type='range' min='0' max='36' step='1' value='36' />
+    </div>
+  </div>
+
+  <script type="text/javascript" src="{{ url_for('static', filename='js/config.js') }}"></script>
+  <!-- Our JS -->
+  <script type="text/javascript" src="{{ url_for('static', filename='js/logic.js') }}"></script>
+  
+</body>
+</html>

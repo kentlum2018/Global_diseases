@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <title>Climate Change and Diseases</title>
+
+      <!-- Mapbox CDN -->
+      <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.js'></script>
+      <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.css' rel='stylesheet'/>
+    
+      <!-- D3 -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.min.js"></script>
+
+      <!-- access css for javascript addins and general page -->
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/app.css') }}">
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+   </head>
+   <body>
+      <header class="page-header vertical-science">
+         <div class="header-wrapper">
+            <!-- <a class="logo" href="https://fivethirtyeight.com/"><img width="20" height="20" alt="Climate Change and Disease Data" src="/Users/muhammadwaliji/Desktop/project2 html/logo.png"></a> -->
+         </div>
+      </header>
+      <div id="header-spacer"></div>
+      <div class="container">
+         <div id="intro">
+            <h1>Climate change and disease prevalance</h1>
+            <!-- <h2 class="article-subtitle">CHANGE THIS BASED ON THE MAP</h2> -->
+            <p class="byline">By<span class="author"> </span>
+               <span>Schehrbano Khan, Russell Perry, Monica De La Torre, Kent Lum</a></span>
+            </p>
+            <p class="byline">
+               <span>note: map may take a minute to load lines</a></span>
+            </p>
+         </div>
+      </div>
+      
+      <!-- <div class="note">
+         <p class="keyNote">THIS IS THE HEADLINE OF THE MAP. ADD STUFF TO THIS IF YOU NEED TO HAVE THE BOTTOM SAY SOMETHING</p>
+         </div> -->
+         <iframe src="{{ iframe }}" width="100%" height="90%"></iframe>
+      <div class="container" id="text">
+         <div class="body-copy">
+            <!-- <div class="link-out updates">
+               <div class="update-title"></div>
+               </div> -->
+            <p class="article-text">
+               <br>
+               "Climate change is the largest and most comprehensive threat to global health security,” says global change biologist 
+               Colin J. Carlson, PhD, a postdoctoral fellow in Georgetown University’s biology department. The earth’s climate has 
+               constantly been changing over time. The current period of warming is occurring more rapidly than past decades. Scientists 
+               are concerned that the natural fluctuation, or variability, is being overtaken by a rapid human-induced warming that has 
+               serious implications for the stability of the planet's climate. With this significant shift in global temperature more people 
+               than ever before may be newly exposed to disease carrying mosquitoes.
+            </p>
+            <p class="article-text">According to the World Health Organization, mosquitoes are one of the deadliest animals
+               in the world, carrying diseases that cause millions of deaths every year. With this continuous change, diseases 
+               that we think of as strictly tropical may show up more often in areas with suitable climates. More severe climate
+               change would produce proportionally worse population exposures.
+            </p>
+            <!-- <p class="article-text"><img class="static-image" src="Put a link to a visualization here"></p> -->
+            <h1>Malaria</h1>
+            <br>
+            <p class="article-text">Malaria is a mosquito-borne infectious disease that affects humans and other animals.
+               Malaria causes symptoms that typically include fever, tiredness, vomiting, and headaches. In severe cases it 
+               can cause yellow skin, seizures, coma, or death. 
+            </p>
+            <p class="article-text">The WHO estimates that in 2015 there were 214 million new cases of malaria resulting 
+               in 438,000 deaths. There are about 10,000 malaria cases per year in Western Europe, and 1300–1500 in the 
+               United States. About 900 people died from the disease in Europe between 1993 and 2003. According to the WHO and
+               UNICEF, deaths attributable to malaria in 2015 were reduced by 60% from a 2000 estimate. Malaria is presently 
+               endemic in a broad band around the equator, in areas of the Americas, many parts of Asia, and much of Africa;
+               in Sub-Saharan Africa, 85–90% of malaria fatalities occur. 
+            </p>
+            <br>
+            <h1>Yellow Fever</h1>
+            <br>
+            <p class="article-text">Yellow Fever is transmitted by infected mosquitos. Once contracted, the yellow fever virus
+               incubates in the body for 3 to 6 days. 
+            </p>
+            <p class="article-text">Forty-seven countries in Africa are either endemic for, or have regions that are endemic
+               for, yellow fever. An estimated 84 000–110 000 severe cases of yellow fever were reported in 2013 leading to 
+               29 000–60 000 deaths. 
+            </p>
+            <!-- <p class="article-text"><img class="static-image" src="Put a link to a visualization here"></p> -->
+            <br>
+            <h1>Leprosy</h1>
+            <br>
+            <p class="article-text">Leprosy is a chronic infectious disease.In 2016, there were 216,108 new leprosy cases registered, 
+               corresponding to a global detection rate of 0.29 per 10,000 people.
+            </p>
+            <p class="article-text">Although the number of cases worldwide continues to fall, pockets of high prevalence remain in certain
+               areas such as Brazil, South Asia (India, Nepal, Bhutan), some parts of Africa (Tanzania, Madagascar,Mozambique), and the 
+               western Pacific. About 150 to 250 cases are diagnosed in the United States each year.
+            </p>
+            <br>
+            <h1>Malaria and Yellow Fever Spread</h1>
+            <br>
+            <p class="article-text"> Malaria and yellow fever are prevalent in tropical and subtropical regions because of rainfall,
+               consistent high temperatures and high humidity, along with stagnant waters where mosquito larvae readily breed. 
+               With changing temperature and a global shift in climate, there are more reported cases of Malaria in non tropical
+               regions.
+            </p>
+         </div>
+      </div>
+      <div class="container">
+         <div id="footer">
+            <div class="sources">
+               <p>Source:<br> <span><a href="https://gumc.georgetown.edu/news-release/a-billion-people-will-be-newly-exposed-to-diseases-like-dengue-fever-as-world-temperatures-rise/">A Billion People Will Be Newly Exposed to Diseases Like Dengue Fever as World Temperatures Rise</a>
+                  <br>
+                  <a href="https://developers.google.com/public-data/docs/canonical/countries_csv">Longitude and Latitude of countries</a>
+                  <br>
+                  <a href="https://www.ncdc.noaa.gov/cdo-web/webservices/v2">Climate and weather data</a>
+                  </span>
+               </p>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>
