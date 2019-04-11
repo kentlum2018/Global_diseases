@@ -1,8 +1,6 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
 import requests
-from pymongo import MongoClient
 
 def scraper():
     #
